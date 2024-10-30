@@ -8,6 +8,13 @@ public class Personaje_3a : MonoBehaviour
     [SerializeField] private float velocidadMovimiento;
     [SerializeField] CharacterController characterController;
     [SerializeField] private float suavizadoAngulo;
+    [SerializeField] private float radioDeteccion;
+    [SerializeField] private Transform pies;
+    [SerializeField] private LayerMask queEsSuelo;
+    [SerializeField] private float factorGravedad;
+    [SerializeField] private float alturaSalto;
+
+    private Vector3 movimientoVertical;
     private float velocidadRotacion;
 
     void Start()
@@ -19,6 +26,12 @@ public class Personaje_3a : MonoBehaviour
     void Update()
     {
         MoverYRotar();
+        AplicarGravedad();
+        if (EnSuelo())
+        {
+            movimientoVertical.y = 0;
+            Saltar();
+        }
     }
     void MoverYRotar()
     {
@@ -35,6 +48,32 @@ public class Personaje_3a : MonoBehaviour
             transform.eulerAngles = new Vector3(0, anguloSuavizado, 0);
             Vector3 movimiento = Quaternion.Euler(0, anguloRotacion, 0) * Vector3.forward;
             characterController.Move(movimiento * velocidadMovimiento * Time.deltaTime);
+        }
+    }
+    private void AplicarGravedad()
+    {
+        movimientoVertical.y += factorGravedad * Time.deltaTime;
+        characterController.Move(movimientoVertical * Time.deltaTime);
+    }
+    private bool EnSuelo()
+    {
+        //Tirar una esfera de detección en los piescon cierto radio
+        bool resultado = Physics.CheckSphere(pies.position, radioDeteccion, queEsSuelo);
+        return resultado;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawSphere(pies.position, radioDeteccion); 
+        Gizmos.DrawWireSphere(pies.position, radioDeteccion);
+    }
+    private void Saltar()
+    {
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            movimientoVertical.y = Mathf.Sqrt(-2 * factorGravedad * alturaSalto);
         }
     }
 }
