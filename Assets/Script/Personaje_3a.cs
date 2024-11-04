@@ -13,6 +13,9 @@ public class Personaje_3a : MonoBehaviour
     [SerializeField] private LayerMask queEsSuelo;
     [SerializeField] private float factorGravedad;
     [SerializeField] private float alturaSalto;
+    [SerializeField] private float vidas;
+    [SerializeField] private GameObject enemigo;
+ 
 
     private Vector3 movimientoVertical;
     private float velocidadRotacion;
@@ -75,5 +78,9 @@ public class Personaje_3a : MonoBehaviour
         {
             movimientoVertical.y = Mathf.Sqrt(-2 * factorGravedad * alturaSalto);
         }
+    }
+   public void RecibirDanho(float danhoEnemigo)
+    {
+        vidas -= danhoEnemigo;
     }
 }
