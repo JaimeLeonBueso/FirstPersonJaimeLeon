@@ -17,9 +17,9 @@ public class Enemigo : MonoBehaviour
     [SerializeField] private float radioDeAtaque;
     [SerializeField] private LayerMask queEsdañable;
     [SerializeField] private float danhoEjercido;
+    [SerializeField] private float vida;
 
-
- 
+    public float Vida { get => vida; set => vida = value; }
 
     void Start()
     {
@@ -82,5 +82,17 @@ public class Enemigo : MonoBehaviour
     private void CerrarVentanaAtaque()
     {
        ventanaAbierta = false;
+    }
+    public void Morir()
+    {
+        //CambiarEstadoHuesos(false);
+        animator.enabled = false;
+        agent.enabled = false;
+        Destroy(gameObject, 10);
+    }
+
+    private void CambiarEstadoHuesos()
+    {
+        throw new NotImplementedException();
     }
 }

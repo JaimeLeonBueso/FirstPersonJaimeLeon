@@ -80,4 +80,12 @@ public class Personaje : MonoBehaviour
             movimientoVertical.y = Mathf.Sqrt(-2 * factorGravedad * alturaSalto);
         }
     }
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+       if(hit.gameObject.CompareTag("EnemigoPartes"))
+        {
+            Vector3 vectorPush = hit.gameObject.transform.position - transform.position;
+            hit.gameObject.GetComponent<Rigidbody>().AddForce(vectorPush.normalized * 100, ForceMode.Impulse);
+        }
+    }
 }

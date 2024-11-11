@@ -20,7 +20,7 @@ public class Armas : MonoBehaviour
         {
             if (Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit hitInfo, stats.Alcance))
             {
-
+                //if(hitInfo.transform)
             }
         }
     }
