@@ -6,14 +6,30 @@ using UnityEngine.Video;
 public class EnemigoPartes : MonoBehaviour
 {
     [SerializeField] private Enemigo parentEnemigo;
-    [SerializeField] private Enemigo multiplicadorDanho;
-   public void RecibirDanho(float danhoRecibido)
+    [SerializeField] private float multiplicadorDanho;
+    private Rigidbody rb;
+
+
+    private void Start()
     {
-        //parentEnemigo.Vidas -= danhoRecibido * multiplicadorDanho;
-        //if(parentEnemigo.Vidas <= 0)
-        //{
-        //    parentEnemigo.Morir();
-        //}
+        rb = GetComponent<Rigidbody>();
+    }
+    public void RecibirDanho(float danhoRecibido)
+    {
+        parentEnemigo.Vida -= danhoRecibido * multiplicadorDanho;
+        if (parentEnemigo.Vida <= 0)
+        {
+            parentEnemigo.Morir();
+        }
+    }
+
+    public void Explotar(float fuerzaExplosion, Vector3 puntoImpacto, float radioExplosion, float upModifier)
+    {
+        //Desactivar todo (animaciones, navmeshAgent, huesos: dynamic)
+       parentEnemigo.Morir();
+        rb.AddExplosionForce(fuerzaExplosion, puntoImpacto, radioExplosion, upModifier, ForceMode.Impulse);
+
+
+
     }
 }
-

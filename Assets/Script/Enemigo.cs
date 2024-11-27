@@ -7,46 +7,57 @@ using UnityEngine.UIElements;
 
 public class Enemigo : MonoBehaviour
 {
+
+    [Header("Sistema combate")]
+    [SerializeField] private float vida;
+    [SerializeField] private float danhoEnemigo;
+    [SerializeField] private Transform puntoAtaque1;
+    [SerializeField] private Transform puntoAtaque2;
+    [SerializeField] private float radioAtaque;
+    [SerializeField] private LayerMask queEsDanhable;
+
     private NavMeshAgent agent;
-    private Personaje_3a personaje;
+    private Personaje personaje;
     private Animator animator;
     private bool ventanaAbierta;
     private bool puedoDanhar = true;
-    [SerializeField] private Transform puntoAtaque1;
-    [SerializeField] private Transform puntoAtaque2;
-    [SerializeField] private float radioDeAtaque;
-    [SerializeField] private LayerMask queEsdañable;
-    [SerializeField] private float danhoEjercido;
-    [SerializeField] private float vida;
+    Rigidbody[] huesos;
 
     public float Vida { get => vida; set => vida = value; }
+
+
 
     void Start()
     {
        agent = GetComponent<NavMeshAgent>();
-       personaje = GameObject.FindObjectOfType<Personaje_3a>();
-        animator = GetComponent<Animator>();
+       personaje = GameObject.FindObjectOfType<Personaje>();
+       animator = GetComponent<Animator>();
+       huesos = GetComponentsInChildren<Rigidbody>();
+       CambiarEstadoHuesos(true);
     }
 
-  
+
     void Update()
     {
-        Perseguir();
-        if(ventanaAbierta && puedoDanhar)
+        if (agent.enabled)
         {
-            DetectarImpacto();
+            Perseguir();
+            if (ventanaAbierta && puedoDanhar)
+            {
+                DetectarImpacto();
+            }
         } 
     }
 
     private void DetectarImpacto()
     {
-       Collider[] zonasDetectadas1 = Physics.OverlapSphere(puntoAtaque1.position, radioDeAtaque, queEsdañable);
-       Collider[] zonasDetectadas2 = Physics.OverlapSphere(puntoAtaque2.position, radioDeAtaque, queEsdañable);
+       Collider[] zonasDetectadas1 = Physics.OverlapSphere(puntoAtaque1.position, radioAtaque, queEsDanhable);
+       Collider[] zonasDetectadas2 = Physics.OverlapSphere(puntoAtaque2.position, radioAtaque, queEsDanhable);
         if(zonasDetectadas1.Length > 0)
         {
             for (int i = 0; i < zonasDetectadas1.Length; i++)
             {
-                zonasDetectadas1[i].GetComponent<Personaje_3a>().RecibirDanho(danhoEjercido);
+                zonasDetectadas1[i].GetComponent<Personaje>().RecibirDanho(danhoEnemigo);
 
             }
             puedoDanhar = false;
@@ -58,23 +69,27 @@ public class Enemigo : MonoBehaviour
 
     }
 
+
     private void Perseguir()
     {
         agent.SetDestination(personaje.transform.position);
 
-        if (agent.remainingDistance <= agent.stoppingDistance)
+        if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
         {
             agent.isStopped = true;
             animator.SetBool("Ataque", true);
         }
     }
+  
 
     private void FinAtaque()
     {
         agent.isStopped = false;
         animator.SetBool("Ataque", false);
         puedoDanhar = true;
-    } 
+    }
+
+  
     private void AbrirVentanaAtaque()
     {
        ventanaAbierta = true;
@@ -85,14 +100,20 @@ public class Enemigo : MonoBehaviour
     }
     public void Morir()
     {
-        //CambiarEstadoHuesos(false);
+        CambiarEstadoHuesos(false);
         animator.enabled = false;
         agent.enabled = false;
         Destroy(gameObject, 10);
     }
 
-    private void CambiarEstadoHuesos()
+
+    private void CambiarEstadoHuesos(bool estado)
     {
-        throw new NotImplementedException();
+        for (int i = 0; i < huesos.Length; i++)
+        {
+            huesos[i].isKinematic = estado;
+        }
     }
+
+  
 }

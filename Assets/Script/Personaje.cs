@@ -5,22 +5,30 @@ using UnityEngine;
 
 public class Personaje : MonoBehaviour
 {
+
+    [SerializeField] private float vidas;
+
+    [Header("Movimiento")]
     [SerializeField] private float velocidadMovimiento;
-    [SerializeField] CharacterController characterController;
-    [SerializeField] private float suavizadoAngulo;
-    [SerializeField] private float radioDeteccion;
-    [SerializeField] private Transform pies;
-    [SerializeField] private LayerMask queEsSuelo;
     [SerializeField] private float factorGravedad;
     [SerializeField] private float alturaSalto;
 
+    [Header("Detección suelo")]
+    [SerializeField] private float radioDeteccion;
+    [SerializeField] private Transform pies;
+    [SerializeField] private LayerMask queEsSuelo;
+
+  
+    private CharacterController characterController;
     private Vector3 movimientoVertical;
-    private float velocidadRotacion;
+
+   
 
     void Start()
     {
        characterController = GetComponent<CharacterController>();
        Cursor.lockState = CursorLockMode.Locked;
+
     }
 
     
@@ -33,7 +41,7 @@ public class Personaje : MonoBehaviour
             movimientoVertical.y = 0;
             Saltar();
         }
-     
+   
     }
     void MoverYRotar()
     {
@@ -53,11 +61,15 @@ public class Personaje : MonoBehaviour
             characterController.Move(movimiento *velocidadMovimiento *Time.deltaTime);
         }
     }
+
+
     private void AplicarGravedad()
     {
         movimientoVertical.y += factorGravedad * Time.deltaTime;
         characterController.Move(movimientoVertical * Time.deltaTime);
     }
+
+   
     private bool EnSuelo()
     {
         //Tirar una esfera de detección en los piescon cierto radio
@@ -65,12 +77,15 @@ public class Personaje : MonoBehaviour
         return resultado;
     }
 
+  
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
         Gizmos.DrawSphere(pies.position, radioDeteccion);
         Gizmos.DrawWireSphere(pies.position, radioDeteccion);
     }
+   
+
 
     private void Saltar()
     {
@@ -80,12 +95,21 @@ public class Personaje : MonoBehaviour
             movimientoVertical.y = Mathf.Sqrt(-2 * factorGravedad * alturaSalto);
         }
     }
+
+   
+
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-       if(hit.gameObject.CompareTag("EnemigoPartes"))
+       if(hit.gameObject.CompareTag("ParteEnemigo"))
         {
             Vector3 vectorPush = hit.gameObject.transform.position - transform.position;
             hit.gameObject.GetComponent<Rigidbody>().AddForce(vectorPush.normalized * 100, ForceMode.Impulse);
         }
+    }
+   
+
+    public void RecibirDanho(float danhoEnemigo)
+    {
+        vidas -= danhoEnemigo;
     }
 }

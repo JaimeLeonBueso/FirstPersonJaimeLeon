@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d885fefef0265b3468e7111cfb4fdb35, type: 3}
   m_Name: Tasser
   m_EditorClassIdentifier: 
-  balasCargador: 0
-  balasBolsa: 0
-  cadenciaDisparo: 0
-  Alcance: 0
-  danhoAtaque: 0
+  balasCargador: 5
+  balasBolsa: 5
+  cadenciaDisparo: 5
+  Alcance: 5
+  danhoAtaque: 5

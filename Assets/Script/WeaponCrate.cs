@@ -32,5 +32,9 @@ public class WeaponCrate : MonoBehaviour
     private void OnLidLifted()
     {
         _visualEffect.SendEvent("OnPlay");
+
     }
+    public void AbrirCaja()
+    {
+    } 
 }
